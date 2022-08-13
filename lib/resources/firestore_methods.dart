@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:homestay/models/post.dart';
 import 'package:homestay/resources/storage_methods.dart';
 import 'package:homestay/models/favourite.dart';
+import 'package:homestay/models/book.dart';
 import 'package:uuid/uuid.dart';
 
 class FirestoreMethods {
@@ -73,6 +74,30 @@ class FirestoreMethods {
       );
 
       _firestore.collection('favourite').doc(favouriteId).set(
+            favourite.toJson(),
+          );
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  // upload Favourite
+  Future<String> uploadBooking(
+    String postId,
+    String userId,
+  ) async {
+    String res = "some error occured";
+    try {
+      String bookId = const Uuid().v1();
+      Book favourite = Book(
+        postId: postId,
+        userId: userId,
+        bookId: bookId,
+      );
+
+      _firestore.collection('booking').doc(bookId).set(
             favourite.toJson(),
           );
       res = 'success';

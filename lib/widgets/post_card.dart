@@ -50,7 +50,7 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
-  Future<void> check(uid) async {
+  Future<void> check(String uid) async {
     final docRef = FirebaseFirestore.instance.collection('favourite');
     final docSnapshot = await docRef.get();
     docSnapshot.docs.forEach((doc) {

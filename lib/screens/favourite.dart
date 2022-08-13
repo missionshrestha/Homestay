@@ -10,7 +10,8 @@ import '../widgets/post_card.dart';
 import '../widgets/text_field_input.dart';
 
 class Favourite extends StatefulWidget {
-  const Favourite({Key? key}) : super(key: key);
+  String currentUser;
+  Favourite({Key? key, required this.currentUser}) : super(key: key);
 
   @override
   State<Favourite> createState() => _FavouriteState();
@@ -19,7 +20,9 @@ class Favourite extends StatefulWidget {
 class _FavouriteState extends State<Favourite> {
   List<String> fav = [];
   Future<void> getAllFavourite() async {
-    final docRef = FirebaseFirestore.instance.collection('favourite');
+    final docRef = FirebaseFirestore.instance
+        .collection('favourite')
+        .where('userId', isEqualTo: widget.currentUser);
     final docSnapshot = await docRef.get();
     docSnapshot.docs.forEach(
       (doc) {
@@ -74,6 +77,7 @@ class _FavouriteState extends State<Favourite> {
                         stream: FirebaseFirestore.instance
                             .collection('post')
                             .where("postId", whereIn: fav)
+                            .where("")
                             .snapshots(),
                         builder: (context,
                             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>

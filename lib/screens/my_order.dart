@@ -1,12 +1,121 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:homestay/screens/post_detail.dart';
+import 'package:provider/provider.dart';
 
-class MyOrder extends StatelessWidget {
-  const MyOrder({Key? key}) : super(key: key);
+import '../models/user.dart';
+import '../providers/user_provider.dart';
+import '../widgets/post_card.dart';
+
+class MyOrder extends StatefulWidget {
+  String currentUser;
+  MyOrder({Key? key, required this.currentUser}) : super(key: key);
+
+  @override
+  State<MyOrder> createState() => _MyOrderState();
+}
+
+class _MyOrderState extends State<MyOrder> {
+  List<String> book = [];
+  Future<void> getAllBooking() async {
+    final docRef = FirebaseFirestore.instance
+        .collection('booking')
+        .where('userId', isEqualTo: widget.currentUser);
+    final docSnapshot = await docRef.get();
+    docSnapshot.docs.forEach(
+      (doc) {
+        setState(() {
+          book.add(
+            doc.get('postId').toString(),
+          );
+        });
+      },
+    );
+    // print(book);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAllBooking();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SafeArea(child: Text("From My Order")),
+    User user = Provider.of<UserProvider>(context).getUser;
+
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          width: double.infinity,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    "My Bookings",
+                    style: GoogleFonts.poppins(
+                      textStyle: const TextStyle(
+                          fontSize: 25, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                book.length > 0
+                    ? StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('post')
+                            .where("postId", whereIn: book)
+                            .snapshots(),
+                        builder: (context,
+                            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                                snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () => {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => PostDetail(
+                                      snap: snapshot.data!.docs[index].data(),
+                                      currentUser: user.uid,
+                                    ),
+                                  ),
+                                )
+                              },
+                              child: PostCard(
+                                snap: snapshot.data!.docs[index].data(),
+                                currentUser: user.uid,
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const CircularProgressIndicator(),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

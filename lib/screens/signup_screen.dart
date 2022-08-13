@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homestay/resources/auth_methods.dart';
@@ -20,10 +21,11 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _contactDetail = TextEditingController();
+  TextEditingController? contactDetail = TextEditingController();
 
   Uint8List? _image;
   bool _isLoading = false;
+  bool? isOwner = false;
 
   void signUpUser() async {
     setState(() {
@@ -203,28 +205,66 @@ class _SignupScreenState extends State<SignupScreen> {
                           textInputType: TextInputType.text,
                           isPass: true,
                         ),
-                        const SizedBox(
-                          height: 28,
+                        CheckboxListTile(
+                          title: const Text("Are you a homestay owner?"),
+                          value: isOwner,
+                          onChanged: (newValue) {
+                            setState(() {
+                              isOwner = newValue;
+                            });
+                          },
+                          controlAffinity: ListTileControlAffinity
+                              .leading, //  <-- leading Checkbox
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        Text(
-                          "Contact Number",
-                          style: GoogleFonts.poppins(
-                            textStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFieldInput(
-                          textEditingController: _contactDetail,
-                          hintText: "Number",
-                          textInputType: TextInputType.number,
-                          isPass: true,
-                        ),
+                        isOwner!
+                            ? Column(
+                                children: [
+                                  Text(
+                                    "Contact Number",
+                                    style: GoogleFonts.poppins(
+                                      textStyle: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  TextFieldInput(
+                                    textEditingController: contactDetail!,
+                                    hintText: "Number",
+                                    textInputType: TextInputType.number,
+                                    isPass: true,
+                                  ),
+                                  // FirebasePhoneAuthHandler(
+                                  //   phoneNumber: "+9779866365148",
+                                  //   signOutOnSuccessfulVerification: false,
+                                  //   linkWithExistingUser: false,
+                                  //   builder: (context, controller) {
+                                  //     return SizedBox.shrink();
+                                  //   },
+                                  //   onLoginSuccess:
+                                  //       (userCredential, autoVerified) {
+                                  //     debugPrint(
+                                  //         "autoVerified: $autoVerified");
+                                  //     debugPrint(
+                                  //         "Login success UID: ${userCredential.user?.uid}");
+                                  //   },
+                                  //   onLoginFailed:
+                                  //       (authException, stackTrace) {
+                                  //     debugPrint(
+                                  //         "An error occurred: ${authException.message}");
+                                  //   },
+                                  //   onError: (error, stackTrace) {},
+                                  // ),
+                                ],
+                              )
+                            : const SizedBox(
+                                height: 0,
+                              ),
                         const SizedBox(
                           height: 28,
                         ),

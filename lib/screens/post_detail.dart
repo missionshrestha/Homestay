@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homestay/resources/firestore_methods.dart';
 import 'package:homestay/screens/booking_screen.dart';
+import 'package:homestay/screens/my_order.dart';
 import 'package:homestay/utils/utils.dart';
 // import 'package:latlng/latlng.dart';
 import 'package:latlong2/latlong.dart';
@@ -37,6 +38,34 @@ class _PostDetailState extends State<PostDetail> {
         setState(() {
           isPressed = true;
         });
+      } else {
+        showSnackBar(res, context);
+      }
+    } catch (err) {
+      showSnackBar(err.toString(), context);
+    }
+  }
+
+  void decreaseRoomNo() async {
+    if (double.parse(widget.snap['noOfRooms']) > 0.0) {
+      await FirebaseFirestore.instance
+          .collection('post')
+          .doc(widget.snap['postId'])
+          .update({
+        'noOfRooms': double.parse(widget.snap['noOfRooms']).toInt() - 1
+      });
+    }
+  }
+
+  void uploadBooking(String uid) async {
+    try {
+      String res = await FirestoreMethods().uploadBooking(
+        widget.snap['postId'],
+        uid,
+      );
+      if (res == "success") {
+        showSnackBar("Booked", context);
+        decreaseRoomNo();
       } else {
         showSnackBar(res, context);
       }
@@ -92,13 +121,6 @@ class _PostDetailState extends State<PostDetail> {
             isPressed = false;
           });
         }
-        // else {
-        //   showSnackBar("Different", context);
-        //   uploadFavourite(uid);
-        //   setState(() {
-        //     isPressed = true;
-        //   });
-        // }
       });
     }
   }
@@ -109,6 +131,28 @@ class _PostDetailState extends State<PostDetail> {
         builder: (context) => BookingScreen(),
       ),
     );
+  }
+
+  void bookRoom(String uid) async {
+    final docRef = FirebaseFirestore.instance.collection('booking');
+    final docSnapshot = await docRef.get();
+    if (docSnapshot.docs.length == 0) {
+      uploadBooking(uid);
+    } else {
+      docSnapshot.docs.forEach((doc) {
+        if (doc.get('postId') == widget.snap['postId'] &&
+            doc.get('userId') == uid) {
+          showSnackBar("Already Booked", context);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => MyOrder(
+                currentUser: uid,
+              ),
+            ),
+          );
+        }
+      });
+    }
   }
 
   // stringToList(String temp) {
@@ -386,41 +430,79 @@ class _PostDetailState extends State<PostDetail> {
                 const SizedBox(
                   height: 18,
                 ),
-                InkWell(
-                  onTap: navigateToBooking,
-                  child: Container(
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    decoration: const ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(4),
+                widget.snap['uid'] != user.uid
+                    ? InkWell(
+                        onTap: () {
+                          bookRoom(user.uid);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          decoration: const ShapeDecoration(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(4),
+                              ),
+                            ),
+                            color: Color.fromRGBO(101, 146, 233, 1),
+                          ),
+                          child: _isLoading
+                              ? const Center(
+                                  child: SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Color.fromRGBO(255, 255, 255, 1),
+                                    ),
+                                  ),
+                                )
+                              : Text(
+                                  "Book Now",
+                                  style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      )
+                    : InkWell(
+                        onTap: navigateToBooking,
+                        child: Container(
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          decoration: const ShapeDecoration(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(4),
+                              ),
+                            ),
+                            color: Color.fromRGBO(101, 146, 233, 1),
+                          ),
+                          child: _isLoading
+                              ? const Center(
+                                  child: SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Color.fromRGBO(255, 255, 255, 1),
+                                    ),
+                                  ),
+                                )
+                              : Text(
+                                  "View Reservation",
+                                  style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
                         ),
                       ),
-                      color: Color.fromRGBO(101, 146, 233, 1),
-                    ),
-                    child: _isLoading
-                        ? const Center(
-                            child: SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: Color.fromRGBO(255, 255, 255, 1),
-                              ),
-                            ),
-                          )
-                        : Text(
-                            "Book Now",
-                            style: GoogleFonts.poppins(
-                              textStyle: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                  ),
-                ),
               ],
             ),
           ),

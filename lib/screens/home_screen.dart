@@ -71,8 +71,10 @@ class _HomeScreenState extends State<HomeScreen> {
         body: PageView(
           children: [
             Home(),
-            MyOrder(),
-            Favourite(),
+            MyOrder(
+              currentUser: user.uid,
+            ),
+            Favourite(currentUser: user.uid),
             Setting(),
           ],
           controller: pageController,

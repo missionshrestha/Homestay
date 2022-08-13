@@ -20,6 +20,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController _searchController = TextEditingController();
+  String? searchQuery = '';
+
   String greeting() {
     var hour = DateTime.now().hour;
     if (hour < 12) {
@@ -29,6 +31,12 @@ class _HomeState extends State<Home> {
       return 'Afternoon';
     }
     return 'Evening';
+  }
+
+  void doSomething(String s) {
+    setState(() {
+      searchQuery = _searchController.text;
+    });
   }
 
   @override
@@ -95,49 +103,99 @@ class _HomeState extends State<Home> {
                     //   ),
                     // );
                   },
-                  child: IgnorePointer(
-                    child: TextFieldInput(
-                      textEditingController: _searchController,
-                      hintText: "search",
-                      textInputType: TextInputType.text,
-                    ),
+                  // // child: IgnorePointer(
+                  // child: TextFieldInput(
+                  //   textEditingController: _searchController,
+                  //   hintText: "Search by address",
+                  //   textInputType: TextInputType.text,
+                  // ),
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: doSomething,
+                    decoration:
+                        const InputDecoration(hintText: "Search by address"),
                   ),
+                  // ),
                 ),
-                StreamBuilder(
-                  stream:
-                      FirebaseFirestore.instance.collection('post').snapshots(),
-                  builder: (context,
-                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                          snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) => GestureDetector(
-                        onTap: () => {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => PostDetail(
+                searchQuery == ''
+                    ? StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('post')
+                            .snapshots(),
+                        builder: (context,
+                            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                                snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () => {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => PostDetail(
+                                      snap: snapshot.data!.docs[index].data(),
+                                      currentUser: user.uid,
+                                    ),
+                                  ),
+                                )
+                              },
+                              child: PostCard(
                                 snap: snapshot.data!.docs[index].data(),
                                 currentUser: user.uid,
                               ),
                             ),
-                          )
+                          );
                         },
-                        child: PostCard(
-                          snap: snapshot.data!.docs[index].data(),
-                          currentUser: user.uid,
-                        ),
+                      )
+                    : StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('post')
+                            .where('address',
+                                isGreaterThanOrEqualTo: searchQuery)
+                            .where("address",
+                                isLessThanOrEqualTo: '{searchQuery}' + "\uf7ff")
+                            .snapshots(),
+                        builder: (context,
+                            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                                snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () => {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => PostDetail(
+                                      snap: snapshot.data!.docs[index].data(),
+                                      currentUser: user.uid,
+                                    ),
+                                  ),
+                                )
+                              },
+                              child: PostCard(
+                                snap: snapshot.data!.docs[index].data(),
+                                currentUser: user.uid,
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ],
             ),
           ),
