@@ -42,6 +42,8 @@ dependencies:
   booking_calendar: ^1.1.4
   json_annotation: ^4.6.0
   intl: ^0.17.0
+  flutter_svg: ^1.0.3
+  introduction_screen: ^3.0.0
   flutter:
     sdk: flutter
 
@@ -75,8 +77,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

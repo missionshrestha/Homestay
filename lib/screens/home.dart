@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homestay/screens/add_homestay.dart';
 import 'package:homestay/screens/post_detail.dart';
-import 'package:homestay/screens/search_screen.dart';
 import 'package:homestay/widgets/post_card.dart';
 import 'package:homestay/widgets/text_field_input.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +30,24 @@ class _HomeState extends State<Home> {
     return 'Evening';
   }
 
+  String dropdownvalue = 'Cheapest';
+  var items = [
+    'Cheapest',
+    'Nearest',
+  ];
+  String communityDropdownvalue = 'None';
+  var communityItems = [
+    'Magar',
+    'Rai',
+    'Tharu',
+    'Limbu',
+    'Sherpa',
+    'Others',
+    'None'
+  ];
+  String? value;
+  final controller = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<UserProvider>(context).getUser;
@@ -41,6 +58,7 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           width: double.infinity,
           child: SingleChildScrollView(
+            controller: controller,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -103,6 +121,73 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Sort by: '),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    DropdownButton(
+                      dropdownColor: Color.fromRGBO(32, 34, 54, 1),
+                      // Initial Value
+                      value: dropdownvalue,
+
+                      // Down Arrow Icon
+                      icon: const Icon(Icons.keyboard_arrow_down),
+
+                      // Array list of items
+                      items: items.map((String items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Text(items),
+                        );
+                      }).toList(),
+                      // After selecting the desired option,it will
+                      // change button value to selected value
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownvalue = newValue!;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Community'),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    DropdownButton(
+                      dropdownColor: Color.fromRGBO(32, 34, 54, 1),
+                      // Initial Value
+                      value: communityDropdownvalue,
+
+                      // Down Arrow Icon
+                      icon: const Icon(Icons.keyboard_arrow_down),
+
+                      // Array list of items
+                      items: communityItems.map((String items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Text(items),
+                        );
+                      }).toList(),
+                      // After selecting the desired option,it will
+                      // change button value to selected value
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          communityDropdownvalue = newValue!;
+                        });
+                      },
+                    ),
+                  ],
+                ),
                 StreamBuilder(
                   stream:
                       FirebaseFirestore.instance.collection('post').snapshots(),
@@ -141,15 +226,42 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AddHomestay()),
-          );
-        },
-        backgroundColor: const Color.fromRGBO(101, 146, 233, 1),
-        child: const Icon(Icons.add),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.fromLTRB(42.0, 0, 10, 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+              width: 30,
+              child: FloatingActionButton(
+                onPressed: scrollUp,
+                backgroundColor: Color.fromRGBO(101, 146, 233, 1),
+                child: const Icon(
+                  Icons.arrow_upward,
+                  color: Colors.white,
+                ),
+                elevation: 0,
+              ),
+            ),
+            Expanded(child: Container()),
+            FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AddHomestay()),
+                );
+              },
+              backgroundColor: const Color.fromRGBO(101, 146, 233, 1),
+              child: const Icon(Icons.add),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  void scrollUp() {
+    final double start = 0;
+    controller.animateTo(start,
+        duration: Duration(milliseconds: 500), curve: Curves.easeIn);
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:homestay/providers/user_provider.dart';
 import 'package:homestay/screens/home_screen.dart';
 import 'package:homestay/screens/login_screen.dart';
+import 'package:homestay/screens/onboarding_page.dart';
 import 'package:homestay/screens/signup_screen.dart';
 import 'package:homestay/utils/colors.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +57,7 @@ class MyApp extends StatelessWidget {
               );
             }
 
-            return const LoginScreen();
+            return const OnBoardingPage();
           }),
         ),
       ),
