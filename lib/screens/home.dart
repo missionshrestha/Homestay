@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homestay/screens/add_homestay.dart';
+import 'package:homestay/screens/post_detail.dart';
+import 'package:homestay/screens/search_screen.dart';
 import 'package:homestay/widgets/post_card.dart';
+import 'package:homestay/widgets/text_field_input.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user.dart';
@@ -16,6 +19,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  TextEditingController _searchController = TextEditingController();
   String greeting() {
     var hour = DateTime.now().hour;
     if (hour < 12) {
@@ -80,6 +84,25 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
+                InkWell(
+                  onTap: () {
+                    // Navigator.of(context).push(
+                    //   MaterialPageRoute(
+                    //     builder: (context) => () => {},
+                    //   ),
+                    // );
+                  },
+                  child: IgnorePointer(
+                    child: TextFieldInput(
+                      textEditingController: _searchController,
+                      hintText: "search",
+                      textInputType: TextInputType.text,
+                    ),
+                  ),
+                ),
                 StreamBuilder(
                   stream:
                       FirebaseFirestore.instance.collection('post').snapshots(),
@@ -96,7 +119,20 @@ class _HomeState extends State<Home> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) => PostCard(),
+                      itemBuilder: (context, index) => GestureDetector(
+                        onTap: () => {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => PostDetail(
+                                snap: snapshot.data!.docs[index].data(),
+                              ),
+                            ),
+                          )
+                        },
+                        child: PostCard(
+                          snap: snapshot.data!.docs[index].data(),
+                        ),
+                      ),
                     );
                   },
                 ),

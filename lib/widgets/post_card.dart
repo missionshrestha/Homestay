@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:homestay/utils/colors.dart';
 
 class PostCard extends StatefulWidget {
-  const PostCard({Key? key}) : super(key: key);
+  final snap;
+  const PostCard({Key? key, required this.snap}) : super(key: key);
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -45,10 +46,11 @@ class _PostCardState extends State<PostCard> {
                   width: 600,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
+                    image: DecorationImage(
                       fit: BoxFit.cover,
                       image: NetworkImage(
-                          "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"),
+                        widget.snap['photoUrl'],
+                      ),
                     ),
                   ),
                 ),
@@ -69,7 +71,7 @@ class _PostCardState extends State<PostCard> {
             height: 18,
           ),
           Text(
-            "Banepa Villa",
+            '${widget.snap['name']}',
             textAlign: TextAlign.left,
             style: GoogleFonts.poppins(
               textStyle: const TextStyle(
@@ -82,7 +84,7 @@ class _PostCardState extends State<PostCard> {
             height: 5,
           ),
           Text(
-            "Dhulikhel,Nepal",
+            "${widget.snap['address']}",
             textAlign: TextAlign.right,
             style: GoogleFonts.poppins(
               textStyle: const TextStyle(
@@ -98,7 +100,7 @@ class _PostCardState extends State<PostCard> {
           Row(
             children: [
               Text(
-                "NRS 500.000",
+                '${widget.snap['price']}' + '.000',
                 textAlign: TextAlign.left,
                 style: GoogleFonts.poppins(
                   textStyle: const TextStyle(
