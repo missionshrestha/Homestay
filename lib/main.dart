@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homestay/screens/login_screen.dart';
+import 'package:homestay/screens/signup_screen.dart';
 import 'package:homestay/utils/colors.dart';
 
 void main() {
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       //   ),
       //   body: const Text("Something is here"),
       // ),
-      home: LoginScreen(),
+      home: SignupScreen(),
     );
   }
 }
