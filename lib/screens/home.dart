@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homestay/screens/add_homestay.dart';
+import 'package:homestay/widgets/post_card.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user.dart';
@@ -78,11 +80,26 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-                //               FloatingActionButton(
-                //   child: const Icon(Icons.add),
-                // ),
-                // floatingActionButtonLocation:
-                //     FloatingActionButtonLocation.centerFloat,
+                StreamBuilder(
+                  stream:
+                      FirebaseFirestore.instance.collection('post').snapshots(),
+                  builder: (context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) => PostCard(),
+                    );
+                  },
+                ),
               ],
             ),
           ),
