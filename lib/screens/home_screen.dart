@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:homestay/providers/user_provider.dart';
-import 'package:homestay/screens/settings.dart';
+import 'package:homestay/screens/profile.dart';
 import 'package:provider/provider.dart';
 import 'package:homestay/models/user.dart' as model;
 
@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.settings,
+                Icons.face_rounded,
                 color: _page == 3
                     ? const Color.fromRGBO(101, 146, 233, 1)
                     : const Color.fromRGBO(202, 202, 202, 1),
