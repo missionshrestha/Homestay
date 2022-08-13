@@ -43,10 +43,12 @@ class _LoginScreenState extends State<LoginScreen> {
       password: _passwordController.text,
     );
     if (res == 'success') {
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     } else {
+      if (!mounted) return;
       showSnackBar(res, context);
     }
     setState(() {

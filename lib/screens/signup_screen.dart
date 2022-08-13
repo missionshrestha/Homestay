@@ -20,6 +20,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _contactDetail = TextEditingController();
+
   Uint8List? _image;
   bool _isLoading = false;
 
@@ -199,6 +201,28 @@ class _SignupScreenState extends State<SignupScreen> {
                           textEditingController: _passwordController,
                           hintText: "Enter your password",
                           textInputType: TextInputType.text,
+                          isPass: true,
+                        ),
+                        const SizedBox(
+                          height: 28,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Contact Number",
+                          style: GoogleFonts.poppins(
+                            textStyle: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextFieldInput(
+                          textEditingController: _contactDetail,
+                          hintText: "Number",
+                          textInputType: TextInputType.number,
                           isPass: true,
                         ),
                         const SizedBox(

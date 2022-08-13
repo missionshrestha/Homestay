@@ -125,12 +125,14 @@ class _HomeState extends State<Home> {
                             MaterialPageRoute(
                               builder: (context) => PostDetail(
                                 snap: snapshot.data!.docs[index].data(),
+                                currentUser: user.uid,
                               ),
                             ),
                           )
                         },
                         child: PostCard(
                           snap: snapshot.data!.docs[index].data(),
+                          currentUser: user.uid,
                         ),
                       ),
                     );

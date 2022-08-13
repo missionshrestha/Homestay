@@ -1,13 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homestay/resources/firestore_methods.dart';
 import 'package:homestay/screens/booking_screen.dart';
+import 'package:homestay/utils/utils.dart';
 // import 'package:latlng/latlng.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
+
+import '../models/user.dart';
+import '../providers/user_provider.dart';
 
 class PostDetail extends StatefulWidget {
   final snap;
-  const PostDetail({Key? key, required this.snap}) : super(key: key);
+  final currentUser;
+  const PostDetail({Key? key, required this.snap, this.currentUser})
+      : super(key: key);
 
   @override
   State<PostDetail> createState() => _PostDetailState();
@@ -17,14 +26,81 @@ class _PostDetailState extends State<PostDetail> {
   bool isPressed = false;
   bool _isLoading = false;
 
-  void hertPressed() {
-    setState(() {
-      if (isPressed == false) {
-        isPressed = true;
+  void uploadFavourite(String uid) async {
+    try {
+      String res = await FirestoreMethods().uploadFavourite(
+        widget.snap['postId'],
+        uid,
+      );
+      if (res == "success") {
+        showSnackBar("Added to Favourite", context);
+        setState(() {
+          isPressed = true;
+        });
       } else {
-        isPressed = false;
+        showSnackBar(res, context);
+      }
+    } catch (err) {
+      showSnackBar(err.toString(), context);
+    }
+  }
+
+  Future<void> check(String uid) async {
+    final docRef = FirebaseFirestore.instance.collection('favourite');
+    final docSnapshot = await docRef.get();
+    docSnapshot.docs.forEach((doc) {
+      if (doc.get('postId') == widget.snap['postId'] &&
+          doc.get('userId') == uid) {
+        // showSnackBar("Removed from favourite.", context);
+        // docRef.doc(doc.get('favouriteId')).delete();
+        setState(() {
+          isPressed = true;
+        });
       }
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    check(widget.currentUser);
+  }
+
+  void hertPressed(String uid) async {
+    // setState(() {
+    //   if (isPressed == false) {
+    //     isPressed = true;
+    //   } else {
+    //     isPressed = false;
+    //   }
+    // });
+
+    final docRef = FirebaseFirestore.instance.collection('favourite');
+    final docSnapshot = await docRef.get();
+    if (docSnapshot.docs.length == 0) {
+      uploadFavourite(uid);
+    } else if (isPressed == false) {
+      uploadFavourite(uid);
+    } else {
+      docSnapshot.docs.forEach((doc) {
+        if (doc.get('postId') == widget.snap['postId'] &&
+            doc.get('userId') == uid) {
+          showSnackBar("Removed from favourite.", context);
+          docRef.doc(doc.get('favouriteId')).delete();
+          setState(() {
+            isPressed = false;
+          });
+        }
+        // else {
+        //   showSnackBar("Different", context);
+        //   uploadFavourite(uid);
+        //   setState(() {
+        //     isPressed = true;
+        //   });
+        // }
+      });
+    }
   }
 
   void navigateToBooking() {
@@ -54,6 +130,8 @@ class _PostDetailState extends State<PostDetail> {
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<UserProvider>(context).getUser;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.snap['name']}'),
@@ -93,7 +171,9 @@ class _PostDetailState extends State<PostDetail> {
                       top: -0,
                       right: 10,
                       child: IconButton(
-                        onPressed: hertPressed,
+                        onPressed: () {
+                          hertPressed(user.uid);
+                        },
                         icon: Icon(
                           isPressed
                               ? Icons.favorite_rounded
@@ -210,6 +290,33 @@ class _PostDetailState extends State<PostDetail> {
                 ),
                 Text(
                   '${widget.snap['facilities'].split(',').join('  - ')}',
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.poppins(
+                    textStyle: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Color.fromARGB(255, 210, 198, 198),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                Text(
+                  'No of Rooms Available:',
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.poppins(
+                    textStyle: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  '${widget.snap['noOfRooms']}',
                   textAlign: TextAlign.left,
                   style: GoogleFonts.poppins(
                     textStyle: const TextStyle(

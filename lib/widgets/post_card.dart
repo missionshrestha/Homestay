@@ -1,10 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homestay/utils/colors.dart';
+import 'package:provider/provider.dart';
+
+import '../models/user.dart';
+import '../providers/user_provider.dart';
+import '../resources/firestore_methods.dart';
+import '../utils/utils.dart';
 
 class PostCard extends StatefulWidget {
   final snap;
-  const PostCard({Key? key, required this.snap}) : super(key: key);
+  final currentUser;
+  const PostCard({Key? key, required this.snap, this.currentUser})
+      : super(key: key);
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -13,18 +22,87 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   bool isPressed = false;
 
-  void hertPressed() {
-    setState(() {
-      if (isPressed == false) {
-        isPressed = true;
+  // void hertPressed() {
+  //   setState(() {
+  //     if (isPressed == false) {
+  //       isPressed = true;
+  //     } else {
+  //       isPressed = false;
+  //     }
+  //   });
+  // }
+  void uploadFavourite(String uid) async {
+    try {
+      String res = await FirestoreMethods().uploadFavourite(
+        widget.snap['postId'],
+        uid,
+      );
+      if (res == "success") {
+        showSnackBar("Added to Favourite", context);
+        setState(() {
+          isPressed = true;
+        });
       } else {
-        isPressed = false;
+        showSnackBar(res, context);
+      }
+    } catch (err) {
+      showSnackBar(err.toString(), context);
+    }
+  }
+
+  Future<void> check(uid) async {
+    final docRef = FirebaseFirestore.instance.collection('favourite');
+    final docSnapshot = await docRef.get();
+    docSnapshot.docs.forEach((doc) {
+      if (doc.get('postId') == widget.snap['postId'] &&
+          doc.get('userId') == uid) {
+        // showSnackBar("Removed from favourite.", context);
+        // docRef.doc(doc.get('favouriteId')).delete();
+        setState(() {
+          isPressed = true;
+        });
       }
     });
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    check(widget.currentUser);
+  }
+
+  void hertPressed(String uid) async {
+    final docRef = FirebaseFirestore.instance.collection('favourite');
+    final docSnapshot = await docRef.get();
+    if (docSnapshot.docs.length == 0) {
+      uploadFavourite(uid);
+    } else if (isPressed == false) {
+      uploadFavourite(uid);
+    } else {
+      docSnapshot.docs.forEach((doc) {
+        if (doc.get('postId') == widget.snap['postId'] &&
+            doc.get('userId') == uid) {
+          showSnackBar("Removed from favourite.", context);
+          docRef.doc(doc.get('favouriteId')).delete();
+          setState(() {
+            isPressed = false;
+          });
+        }
+        // else {
+        //   showSnackBar("Different", context);
+        //   uploadFavourite(uid);
+        //   setState(() {
+        //     isPressed = true;
+        //   });
+        // }
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    User user = Provider.of<UserProvider>(context).getUser;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 20),
       padding: const EdgeInsets.symmetric(
@@ -59,7 +137,9 @@ class _PostCardState extends State<PostCard> {
                 top: -0,
                 right: 10,
                 child: IconButton(
-                  onPressed: hertPressed,
+                  onPressed: () {
+                    hertPressed(user.uid);
+                  },
                   icon: Icon(
                     isPressed ? Icons.favorite_rounded : Icons.favorite_outline,
                   ),
