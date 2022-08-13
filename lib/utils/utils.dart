@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -18,4 +19,12 @@ showSnackBar(String content, BuildContext context) {
       content: Text(content),
     ),
   );
+}
+
+DateTime timeStampToDateTime(Timestamp timestamp) {
+  return DateTime.parse(timestamp.toDate().toString());
+}
+
+Timestamp dateTimeToTimeStamp(DateTime? dateTime) {
+  return Timestamp.fromDate(dateTime ?? DateTime.now()); //To TimeStamp
 }

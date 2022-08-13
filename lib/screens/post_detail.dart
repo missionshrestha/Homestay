@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homestay/screens/booking_screen.dart';
 // import 'package:latlng/latlng.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -14,6 +15,7 @@ class PostDetail extends StatefulWidget {
 
 class _PostDetailState extends State<PostDetail> {
   bool isPressed = false;
+  bool _isLoading = false;
 
   void hertPressed() {
     setState(() {
@@ -23,6 +25,14 @@ class _PostDetailState extends State<PostDetail> {
         isPressed = false;
       }
     });
+  }
+
+  void navigateToBooking() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BookingScreen(),
+      ),
+    );
   }
 
   // stringToList(String temp) {
@@ -264,6 +274,44 @@ class _PostDetailState extends State<PostDetail> {
                         ],
                       ),
                     ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                InkWell(
+                  onTap: navigateToBooking,
+                  child: Container(
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    decoration: const ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(4),
+                        ),
+                      ),
+                      color: Color.fromRGBO(101, 146, 233, 1),
+                    ),
+                    child: _isLoading
+                        ? const Center(
+                            child: SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                color: Color.fromRGBO(255, 255, 255, 1),
+                              ),
+                            ),
+                          )
+                        : Text(
+                            "Book Now",
+                            style: GoogleFonts.poppins(
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
                   ),
                 ),
               ],
