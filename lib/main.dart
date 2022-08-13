@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:homestay/screens/login_screen.dart';
 import 'package:homestay/utils/colors.dart';
 
 void main() {
@@ -17,12 +18,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: mobileBackgroundColorDark,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Homestay"),
-        ),
-        body: const Text("Something is here"),
-      ),
+      // home: Scaffold(
+      //   appBar: AppBar(
+      //     title: const Text("Homestay"),
+      //   ),
+      //   body: const Text("Something is here"),
+      // ),
+      home: LoginScreen(),
     );
   }
 }
