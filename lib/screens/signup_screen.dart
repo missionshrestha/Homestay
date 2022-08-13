@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homestay/resources/auth_methods.dart';
+import 'package:homestay/screens/home_screen.dart';
+import 'package:homestay/screens/login_screen.dart';
 import 'package:homestay/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -40,8 +42,18 @@ class _SignupScreenState extends State<SignupScreen> {
       // show snackbar
       showSnackBar(res, context);
     } else {
-      // nothing
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
     }
+  }
+
+  void navigateToLogin() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: ((context) => const LoginScreen()),
+      ),
+    );
   }
 
   void selectImage() async {
@@ -253,7 +265,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                             ),
                             GestureDetector(
-                              onTap: () => {},
+                              onTap: navigateToLogin,
                               child: Container(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
