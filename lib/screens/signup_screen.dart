@@ -1,7 +1,9 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:homestay/resources/auth_methods.dart';
+import 'package:homestay/utils/utils.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../widgets/text_field_input.dart';
 
@@ -18,6 +20,44 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   Uint8List? _image;
   bool _isLoading = false;
+
+  void signUpUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().signUpUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+      name: _nameController.text,
+      file: _image!,
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (res != 'success') {
+      // show snackbar
+      showSnackBar(res, context);
+    } else {
+      // nothing
+    }
+  }
+
+  void selectImage() async {
+    Uint8List im = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = im;
+    });
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +127,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               bottom: -10,
                               left: 175,
                               child: IconButton(
-                                onPressed: () => {},
+                                onPressed: selectImage,
                                 icon: const Icon(Icons.add_a_photo),
                               ),
                             ),
@@ -154,7 +194,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         //button signup
                         InkWell(
-                          onTap: () => {},
+                          onTap: signUpUser,
                           child: Container(
                             width: double.infinity,
                             alignment: Alignment.center,
