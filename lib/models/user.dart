@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class User {
   final String email;
   final String uid;
@@ -18,4 +20,15 @@ class User {
         "email": email,
         "photoUrl": photoUrl,
       };
+
+  // function that takes in a document snapshot and returns a user model
+  static User fromSnap(DocumentSnapshot snap) {
+    var snapshot = snap.data() as Map<String, dynamic>;
+    return User(
+      name: snapshot['name'],
+      uid: snapshot['uid'],
+      email: snapshot['email'],
+      photoUrl: snapshot['photoUrl'],
+    );
+  }
 }
