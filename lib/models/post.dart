@@ -14,6 +14,7 @@ class Post {
   final String longitude;
   final String address;
   final String photoUrl;
+  final String community;
 
   const Post({
     required this.adderName,
@@ -29,6 +30,7 @@ class Post {
     required this.longitude,
     required this.address,
     required this.photoUrl,
+    required this.community,
   });
 
   // this method is used to convert whatever user object we require to an object
@@ -46,6 +48,7 @@ class Post {
         "longitude": longitude,
         "address": address,
         "photoUrl": photoUrl,
+        "community": community,
       };
 
   // function that takes in a document snapshot and returns a user model
@@ -65,6 +68,7 @@ class Post {
       longitude: snapshot['longitude'],
       address: snapshot['address'],
       photoUrl: snapshot['photoUrl'],
+      community: snapshot['community'],
     );
   }
 }

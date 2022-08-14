@@ -25,6 +25,7 @@ class FirestoreMethods {
     String longitude,
     String address,
     String price,
+    String community,
   ) async {
     String res = 'some error occured';
     try {
@@ -47,6 +48,7 @@ class FirestoreMethods {
         longitude: longitude,
         address: address,
         photoUrl: photoUrl,
+        community: community,
       );
 
       _firestore.collection('post').doc(postId).set(

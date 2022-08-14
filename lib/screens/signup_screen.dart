@@ -21,7 +21,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  TextEditingController? contactDetail = TextEditingController();
+  final TextEditingController contactDetail = TextEditingController();
+  TextEditingController? communityCOde = TextEditingController();
 
   Uint8List? _image;
   bool _isLoading = false;
@@ -36,6 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
       password: _passwordController.text,
       name: _nameController.text,
       file: _image!,
+      number: contactDetail.text,
     );
 
     setState(() {
@@ -72,6 +74,8 @@ class _SignupScreenState extends State<SignupScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    contactDetail.dispose();
+
     super.dispose();
   }
 
@@ -205,8 +209,54 @@ class _SignupScreenState extends State<SignupScreen> {
                           textInputType: TextInputType.text,
                           isPass: true,
                         ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Contact Number",
+                              style: GoogleFonts.poppins(
+                                textStyle: const TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextFieldInput(
+                              textEditingController: contactDetail,
+                              hintText: "Number",
+                              textInputType: TextInputType.number,
+                              isPass: true,
+                            ),
+                            // FirebasePhoneAuthHandler(
+                            //   phoneNumber: "+9779866365148",
+                            //   signOutOnSuccessfulVerification: false,
+                            //   linkWithExistingUser: false,
+                            //   builder: (context, controller) {
+                            //     return SizedBox.shrink();
+                            //   },
+                            //   onLoginSuccess:
+                            //       (userCredential, autoVerified) {
+                            //     debugPrint(
+                            //         "autoVerified: $autoVerified");
+                            //     debugPrint(
+                            //         "Login success UID: ${userCredential.user?.uid}");
+                            //   },
+                            //   onLoginFailed:
+                            //       (authException, stackTrace) {
+                            //     debugPrint(
+                            //         "An error occurred: ${authException.message}");
+                            //   },
+                            //   onError: (error, stackTrace) {},
+                            // ),
+                          ],
+                        ),
                         CheckboxListTile(
-                          title: const Text("Are you a homestay owner?"),
+                          title:
+                              const Text("Are you from authorized community?"),
                           value: isOwner,
                           onChanged: (newValue) {
                             setState(() {
@@ -216,14 +266,11 @@ class _SignupScreenState extends State<SignupScreen> {
                           controlAffinity: ListTileControlAffinity
                               .leading, //  <-- leading Checkbox
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
                         isOwner!
                             ? Column(
                                 children: [
                                   Text(
-                                    "Contact Number",
+                                    "Enter your community code",
                                     style: GoogleFonts.poppins(
                                       textStyle: const TextStyle(
                                           fontSize: 14,
@@ -234,7 +281,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                     height: 10,
                                   ),
                                   TextFieldInput(
-                                    textEditingController: contactDetail!,
+                                    textEditingController: communityCOde!,
                                     hintText: "Number",
                                     textInputType: TextInputType.number,
                                     isPass: true,
