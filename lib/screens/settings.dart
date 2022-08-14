@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homestay/resources/auth_methods.dart';
 import 'package:homestay/screens/add_homestay.dart';
+import 'package:homestay/screens/login_screen.dart';
 import 'package:homestay/screens/post_detail.dart';
 import 'package:homestay/screens/search_screen.dart';
 import 'package:homestay/widgets/post_card.dart';
@@ -64,6 +65,11 @@ class Setting extends StatelessWidget {
               InkWell(
                 onTap: () async {
                   await AuthMethods().signOut();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ),
+                  );
                 },
                 child: Container(
                   width: double.infinity,
@@ -112,7 +118,7 @@ class Setting extends StatelessWidget {
                   child: ListView(
                     children: [
                       Text(
-                        " Full Name: \n${user.name}",
+                        "Full Name: ${user.name}",
                         style: GoogleFonts.poppins(
                           textStyle: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w400),
@@ -120,55 +126,7 @@ class Setting extends StatelessWidget {
                         textAlign: TextAlign.start,
                       ),
                       Text(
-                        " Your email: \n ${user.email}",
-                        style: GoogleFonts.poppins(
-                          textStyle: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w400),
-                        ),
-                        textAlign: TextAlign.start,
-                      ),
-                      Text(
-                        " Full Name: \n${user.name}",
-                        style: GoogleFonts.poppins(
-                          textStyle: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w400),
-                        ),
-                        textAlign: TextAlign.start,
-                      ),
-                      Text(
-                        " Your email: \n ${user.email}",
-                        style: GoogleFonts.poppins(
-                          textStyle: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w400),
-                        ),
-                        textAlign: TextAlign.start,
-                      ),
-                      Text(
-                        " Full Name: \n${user.name}",
-                        style: GoogleFonts.poppins(
-                          textStyle: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w400),
-                        ),
-                        textAlign: TextAlign.start,
-                      ),
-                      Text(
-                        " Your email: \n ${user.email}",
-                        style: GoogleFonts.poppins(
-                          textStyle: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w400),
-                        ),
-                        textAlign: TextAlign.start,
-                      ),
-                      Text(
-                        " Full Name: \n${user.name}",
-                        style: GoogleFonts.poppins(
-                          textStyle: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w400),
-                        ),
-                        textAlign: TextAlign.start,
-                      ),
-                      Text(
-                        " Your email: \n ${user.email}",
+                        "Your email: ${user.email}",
                         style: GoogleFonts.poppins(
                           textStyle: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w400),

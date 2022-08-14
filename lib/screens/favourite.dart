@@ -112,7 +112,36 @@ class _FavouriteState extends State<Favourite> {
                           );
                         },
                       )
-                    : const CircularProgressIndicator(),
+                    : Container(
+                        margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 1),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5),
+                          ),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 16),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.hourglass_empty),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              child: Text(
+                                "Nothing to show.",
+                                style: GoogleFonts.poppins(
+                                  textStyle: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
               ],
             ),
           ),
