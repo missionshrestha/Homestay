@@ -5,12 +5,14 @@ class User {
   final String uid;
   final String name;
   final String photoUrl;
+  final String number;
 
   const User({
     required this.email,
     required this.uid,
     required this.name,
     required this.photoUrl,
+    required this.number,
   });
 
   // this method is used to convert whatever user object we require to an object
@@ -19,6 +21,7 @@ class User {
         "name": name,
         "email": email,
         "photoUrl": photoUrl,
+        "number": number,
       };
 
   // function that takes in a document snapshot and returns a user model
@@ -29,6 +32,7 @@ class User {
       uid: snapshot['uid'],
       email: snapshot['email'],
       photoUrl: snapshot['photoUrl'],
+      number: snapshot['number'],
     );
   }
 }

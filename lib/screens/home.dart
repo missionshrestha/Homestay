@@ -21,6 +21,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   TextEditingController _searchController = TextEditingController();
   String? searchQuery = '';
+  String? communityQuery = '';
 
   String greeting() {
     var hour = DateTime.now().hour;
@@ -33,6 +34,14 @@ class _HomeState extends State<Home> {
     return 'Evening';
   }
 
+  final items = ['None', 'Tharu', 'Gurung', 'Sherpa'];
+  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+        value: item,
+        child: Text(
+          item,
+        ),
+      );
+  String? community;
   void doSomething(String s) {
     setState(() {
       searchQuery = _searchController.text;
@@ -116,6 +125,15 @@ class _HomeState extends State<Home> {
                         const InputDecoration(hintText: "Search by address"),
                   ),
                   // ),
+                ),
+                DropdownButton(
+                  value: community,
+                  items: items.map(buildMenuItem).toList(),
+                  onChanged: (value) => setState(
+                    () {
+                      community = value.toString();
+                    },
+                  ),
                 ),
                 searchQuery == ''
                     ? StreamBuilder(

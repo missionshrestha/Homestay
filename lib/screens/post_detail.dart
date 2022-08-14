@@ -301,6 +301,32 @@ class _PostDetailState extends State<PostDetail> {
                   height: 18,
                 ),
                 Text(
+                  'Community',
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.poppins(
+                    textStyle: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  '${widget.snap['community']}',
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.poppins(
+                    textStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: Color.fromARGB(255, 210, 198, 198)),
+                  ),
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                Text(
                   'Description',
                   textAlign: TextAlign.left,
                   style: GoogleFonts.poppins(

@@ -31,6 +31,7 @@ class _AddHomestayState extends State<AddHomestay> {
   final TextEditingController _latitudeController = TextEditingController();
   final TextEditingController _longitudeController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _communityController = TextEditingController();
 
   bool _isLoading = false;
   bool _isLoadingForPost = false;
@@ -123,6 +124,7 @@ class _AddHomestayState extends State<AddHomestay> {
         _longitudeController.text,
         _addressController.text,
         _priceController.text,
+        _communityController.text,
       );
 
       if (res == 'success') {
@@ -455,6 +457,25 @@ class _AddHomestayState extends State<AddHomestay> {
                       TextFieldInput(
                         textEditingController: _addressController,
                         hintText: "Address",
+                        textInputType: TextInputType.multiline,
+                        isDescription: true,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        "Community:",
+                        style: GoogleFonts.poppins(
+                          textStyle: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFieldInput(
+                        textEditingController: _communityController,
+                        hintText: "Community",
                         textInputType: TextInputType.multiline,
                         isDescription: true,
                       ),
