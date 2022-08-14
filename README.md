@@ -1,8 +1,19 @@
 <h1 align="center" style="border: 0;">Homestay</h1>
 
 Most of the tourists visiting Nepal have not been able to get a feel of local tradition and culture. Realizing this, we have come up with a mobile application called 'Homestay'. 'Homestay' will provide the user with the necessary information about available community homestays in Nepal. The app will also show them the facilities of the homestay along with the local culture of that place. The users can find a suitable homestay based on their criteria, add a homestay to their favorites list and book the homestay. The main goal of our project is to promote the use of homestays and make the information available to the seekers.
-
-
+<h1 align="center" style="border: 0;">Authentic Home</h1>
+<p align='center'>
+<img width=400 src='assets/homestay.png'>
+  </p>
+  
+  <h1 align="center" style="border: 0;">Culture</h1>
+  <p align='center'>
+<img width=400 src='assets/culture.png'>
+  </p>
+<h1 align="center" style="border: 0;">Hospitality</h1>
+<p align='center'>
+<img width=400 src='assets/hospitality.png'>
+</p>
 ## Run Locally
 
 > Install Flutter on your machine. [Need help?](https://docs.flutter.dev/get-started/install)
