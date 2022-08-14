@@ -93,6 +93,8 @@ class Setting extends StatelessWidget {
                         ),
                         textAlign: TextAlign.start,
                       ),
+
+                      // TODO Update with other user data
                       Text(
                         " Full Name: \n${user.name}",
                         style: GoogleFonts.poppins(
