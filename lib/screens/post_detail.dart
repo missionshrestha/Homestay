@@ -136,8 +136,15 @@ class _PostDetailState extends State<PostDetail> {
   void bookRoom(String uid) async {
     final docRef = FirebaseFirestore.instance.collection('booking');
     final docSnapshot = await docRef.get();
-    if (docSnapshot.docs.length == 0) {
+    if (docSnapshot.docs.length >= 0) {
       uploadBooking(uid);
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => MyOrder(
+            currentUser: uid,
+          ),
+        ),
+      );
     } else {
       docSnapshot.docs.forEach((doc) {
         if (doc.get('postId') == widget.snap['postId'] &&

@@ -58,9 +58,11 @@ class _PostCardState extends State<PostCard> {
           doc.get('userId') == uid) {
         // showSnackBar("Removed from favourite.", context);
         // docRef.doc(doc.get('favouriteId')).delete();
-        setState(() {
-          isPressed = true;
-        });
+        if (this.mounted) {
+          setState(() {
+            isPressed = true;
+          });
+        }
       }
     });
   }
