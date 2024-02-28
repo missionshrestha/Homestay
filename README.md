@@ -23,7 +23,7 @@ Most of the tourists visiting Nepal have not been able to get a feel of local tr
 Clone the project
 
 ```bash
-  git clone https://github.com/kamal0620040/Homestay
+  git clone https://github.com/missionshrestha/Homestay
 ```
 
 Go to the project directory
@@ -32,7 +32,7 @@ Go to the project directory
   cd Homestay
 ```
 
-Install dependencies present in [pubspec.yaml](https://github.com/kamal0620040/Homestay/blob/master/pubspec.yaml) file.
+Install dependencies present in [pubspec.yaml](https://github.com/missionshrestha/Homestay/blob/master/pubspec.yaml) file.
 
 ```bash
   flutter pub get
